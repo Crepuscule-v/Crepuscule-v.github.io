@@ -204,6 +204,11 @@ ul.task-list input[type="checkbox"] {
       display: inline-block;
       margin: 0;
     }
+
+    i.iconlocation {
+        color: var(--global-theme-color);
+        font-size: 0.9rem;
+      }
   }
 }
 
@@ -229,7 +234,8 @@ ul.task-list input[type="checkbox"] {
 
 .post-description {
   margin-bottom: 2rem;
-  font-size: 0.875rem;
+  font-family: 'Roboto Condensed', sans-serif;
+  letter-spacing: 1px;
 
   a {
     color: inherit;
@@ -404,31 +410,12 @@ ul.task-list input[type="checkbox"] {
     font-size: 4rem;
 
     a {
-      img {
-        width: 3.2rem;
-        height: 3.2rem;
-        margin-bottom: 1rem;
-      }
-
-      svg {
-        width: 3.5rem;
-        height: 4rem;
-        margin-bottom: 0.5rem;
-
-        image {
-          width: 3.5rem;
-          height: 3.5rem;
-        }
-      }
-
       i::before {
         color: var(--global-text-color);
         transition-property: all 0.2s ease-in-out;
       }
 
       &:hover {
-        text-decoration: none;
-
         i::before {
           color: var(--global-theme-color);
         }
@@ -440,6 +427,7 @@ ul.task-list input[type="checkbox"] {
     font-size: 0.8rem;
   }
 }
+
 
 .wechat-modal {
   display: none;
@@ -692,6 +680,68 @@ footer.sticky-bottom {
   }
 }
 
+// Projects
+
+.gallery {
+  a {
+    text-decoration: none;
+
+    &:hover {
+      .card-title {
+        color: var(--global-theme-color);
+      }
+    }
+  }
+
+  .card.hoverable {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+    }
+
+    .card.hoverable:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+  
+  .card {
+    figure {
+      margin: 0 0 0 0;
+    }
+    .card-body {
+      padding: 0rem 0.5rem 1.25rem 1.25rem
+    }
+    img {
+      width: 100%;
+    }
+  }
+
+  .col {
+    padding-bottom: 1rem;
+  }
+
+  .grid-sizer,
+  .grid-item {
+    width: 250px;
+    margin-bottom: 10px;
+  }
+
+  h2.category {
+    color: var(--global-divider-color);
+    border-bottom: 1px solid var(--global-divider-color);
+    padding-top: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    text-align: right;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  }
+}
+
 // Publications
 
 .publications {
@@ -728,31 +778,84 @@ footer.sticky-bottom {
 
     li {
       margin-bottom: 1rem;
+      .abbr-preview { // The main container for image and badge
+        position: relative; // Crucial: This allows absolute positioning of children relative to this container.
+                            // It also becomes the element you'll target for the :hover state.
+        display: block;     // Ensure it behaves as a block
 
-      .preview {
-      }
+        // Styling for the conference badge (e.g., "ECCV", "ISSTA")
+        // Targets: <abbr class="badge w-50">
+        .badge {
+          position: absolute;   // Position it relative to .abbr-preview
+          top: 8px;             // Space from the top edge of .abbr-preview
+          left: 8px;            // Space from the left edge of .abbr-preview
+          z-index: 10;          // High z-index to ensure it's on top of the image
 
-      .abbr {
-        margin-bottom: 0.5rem;
+          background-color: var(--global-theme-color); // Use your theme color
+          color: white;
+          padding: 4px 8px;     // Adjust padding for a nice badge size
+          font-size: 0.75em;    // Smaller font size for the badge
+          font-weight: bold;
+          border-radius: 4px;   // Slightly rounded corners for the badge
+          line-height: 1.2;     // Adjust line height if needed
+          text-align: center;
 
-        abbr {
-          display: inline-block;
-          background-color: var(--global-theme-color);
-          margin-bottom: 0.5rem;
-          color: var(--global-card-bg-color) !important;
+          // The class "w-50" from Bootstrap (if used) sets width: 50% !important;
+          // This would make the badge half the width of its container, which might be too large.
+          // To make the badge fit its content (like the "ECCV" example):
+          width: 30% !important;
+          display: inline-block; // So width: auto works as expected
+
+          // Smooth transition for hover effects
+          transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
           a {
             color: white;
-
+            text-decoration: none;
             &:hover {
               text-decoration: none;
             }
           }
         }
 
-        .award {
-          color: var(--global-theme-color) !important;
-          border: 1px solid var(--global-theme-color);
+        // Styling for the preview image container (the <figure> element)
+        figure {
+          margin: 0;        // Remove default browser margins for figure
+          line-height: 0;   // Helps prevent extra space below the image if it's treated as inline-block
+
+          // Styling for the actual image (<img class="preview ...">)
+          .preview {
+            display: block;     // Make the image a block element to fill its container
+            width: 90%;        // Make image take the full width of the .abbr-preview container
+                                // This will override the width="80%" attribute in your HTML for consistency.
+                                // If you strictly need 80%, you might need to adjust badge positioning or container sizes.
+            height: 120px;      // Using the height from your HTML.
+            object-fit: cover;  // Ensures the image covers the area without distortion, cropping if necessary.
+                                // If you prefer to see the whole image and allow letterboxing, use 'contain'.
+                                // If you want natural aspect ratio, set height: auto;
+            border-radius: 6px; // Rounded corners for the preview image, similar to your example
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Initial subtle shadow
+
+            position: relative; // Establishes a stacking context for z-index (though not strictly needed here
+                                // if .badge has a higher z-index and is absolute)
+            z-index: 1;         // Ensure it's below the badge
+
+            // Smooth transition for hover effects
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+          }
+        }
+
+        // Hover effect: Applied when hovering over the .abbr-preview container
+        &:hover {
+          .badge {
+            transform: translateY(-5px) scale(1.05); // Lift the badge up and slightly enlarge
+            // box-shadow: 0 4px 8px rgba(0,0,0,0.15); // Optional: slightly more shadow for badge
+          }
+
+          figure .preview {
+            transform: translateY(-5px) scale(1.02); // Lift the image up (can be same or different from badge)
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); // More pronounced shadow on hover
+          }
         }
       }
 
@@ -1416,4 +1519,33 @@ figure.cover {
   a.cover-link:hover {
     color: #23212d !important;
   }
+}
+
+.post article h2 {
+  margin-top: 2rem;
+}
+
+/* 新闻列表左侧日期徽章 */
+.news .news-date {
+  display: inline-block;
+  background-color: #FF6B6B;  /* 珊瑚红 */
+  color: #FFFFFF;             /* 纯白 */
+  padding: 0.25rem 0.8rem;
+  border-radius: 0.25rem;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  /* ↓↓↓ 阴影 ↓↓↓ */
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.2),   /* 主阴影：更大偏移与更深透明度 */
+    0 2px 4px rgba(0, 0, 0, 0.1);   /* 次阴影：细节补充 */
+}
+
+.news table tr:hover .news-date {
+  box-shadow:
+    0 8px 12px rgba(0, 0, 0, 0.25),
+    0 4px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
